@@ -1,0 +1,52 @@
+from NewsPortal.models import *
+from django.contrib.auth.models import User
+
+user = User.objects.create_user('Alex')
+user2 = User.objects.create_user('Serqey')
+
+author1 = Author.objects.create(username = user)
+author2 = Author.objects.create(username = user2)
+
+category1 = Category.objects.create(name = 'Политика')
+category2 = Category.objects.create(name = 'Спорт')
+category3 = Category.objects.create(name = 'Еда')
+category4 = Category.objects.create(name = 'Кино')
+
+postnews = Post.objects.create(post_author = author1, type_choose = 'news', header = 'Wow incrediable news', text = 'News news news news news news')
+postnews.category.add(category1)
+postarticle1 = Post.objects.create(post_author = author2, type_choose = 'article', header = 'Ronaldo and Messi', text = 'Wow Wow Wow Wow Wow Wow Wow Wow')
+postarticle1.category.add(category2)
+postarticle2 = Post.objects.create(post_author = author2, type_choose = 'article', header = 'Snacks for cinema', text = 'Burger, chips, cola - perfect')
+
+comment1 = Comment.objects.create(post = postnews, user = user, comment_text = 'Coool')
+comment2 = Comment.objects.create(post = postarticle1, user = user2, comment_text = 'Wow')
+comment3 = Comment.objects.create(post = postarticle2, user = user2, comment_text = 'Love coke')
+comment4 = Comment.objects.create(post = postarticle1, user = user, comment_text = 'Messi better than Ronaldo')
+
+Comment.like(comment1)
+Comment.dislike(comment2)
+Comment.dislike(comment3)
+Comment.like(comment1)
+Comment.like(comment4)
+Comment.like(comment4)
+Comment.like(comment4)
+Comment.like(comment4)
+
+Author.update_rating(author1)
+Author.update_rating(author2)
+
+max_rating = Author.objects.order_by('-rating').values_list('rating', flat=True).first()
+
+
+best_author = Author.objects.order_by('-rating').first()
+best_post = Post.objects.filter(post_author=best_author).order_by('-rating').first()
+preview = best_post.preview()
+output_str = f'{best_post.addtime} | {best_author.username} | {best_author.rating} | {best_post.header} | {preview}'
+return output_str
+
+comments = Comment.objects.filter(post=best_post)
+output_strs = []
+for comment in comments:
+    output_str = f'{comment.addtime} | {comment.user.username} | {comment.rating} | {comment.comment_text}'
+    output_strs.append(output_str)
+return '\n'.join(output_strs)
