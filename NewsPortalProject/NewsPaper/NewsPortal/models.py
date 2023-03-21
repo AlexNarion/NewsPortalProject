@@ -53,6 +53,9 @@ class Post(models.Model):
         else:
             return self.text[:124] + '...'
 
+    def __str__(self):
+        return self.header.title()
+
 
 
 
