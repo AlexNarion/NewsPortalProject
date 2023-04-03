@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django_filters.views import FilterView
 from django.views.generic import ListView, DetailView
 from .models import Post
-from .filters import PostFilter, DateFilter
+from .filters import PostFilter
+from .forms import PostFilterForm
 
 
 class PostList(ListView):
@@ -18,20 +20,20 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 
-class PostSearch(ListView):
+class PostSearch(FilterView):
     model = Post
     ordering = 'addtime'
     template_name = 'postsearch.html'
     context_object_name = 'post_search'
     paginate_by = 10
+    filterset_class = PostFilter
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        self.filterset = PostFilter(self.request.GET, queryset)
-        return self.filterset.qs
+    def get_filterset(self, filterset_class):
+        filterset_kwargs = self.get_filterset_kwargs()
+        filterset_kwargs['form'] = PostFilterForm(data=filterset_kwargs['data'], queryset=filterset_kwargs['queryset'])
+        return self.filterset_class(**filterset_kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filterset'] = self.filterset
+        context['filterset'] = self.get_filterset()
         return context
-
