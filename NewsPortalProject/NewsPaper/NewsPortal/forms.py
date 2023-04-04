@@ -13,15 +13,11 @@ class PostFilterForm(PostFilter.form):
         model = PostFilter.Meta.model
         fields = PostFilter.Meta.model
 
-class PostForm(forms.ModelForm):
-    post_author = forms.CharField(max_length=100)
-    category = forms.ModelChoiceField(queryset=PostCategory.category.objects.all(required=False)
-    header = forms.CharField(max_length=50)
-    text  = forms.CharField
 
+class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['post_author','category','header','text']
+        fields = ['post_author','category','header','text','category']
 
 
 

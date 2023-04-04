@@ -45,3 +45,8 @@ class NewsCreate(CreateView):
     form_class = PostForm
     model = Post
     template_name = 'newsedit.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.category = 'NY'
+        return super().form_valid(form)
