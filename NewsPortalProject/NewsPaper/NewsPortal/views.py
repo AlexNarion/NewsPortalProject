@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django_filters.views import FilterView
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from .models import Post
 from .filters import PostFilter
-from .forms import PostFilterForm
+from .forms import PostFilterForm, PostForm
 
 
 class PostList(ListView):
@@ -29,11 +29,19 @@ class PostSearch(FilterView):
     filterset_class = PostFilter
 
     def get_filterset(self, filterset_class):
-        filterset_kwargs = self.get_filterset_kwargs()
-        filterset_kwargs['form'] = PostFilterForm(data=filterset_kwargs['data'], queryset=filterset_kwargs['queryset'])
-        return self.filterset_class(**filterset_kwargs)
+        filterset_kwargs = self.get_filterset_kwargs(filterset_class)
+        return filterset_class(**filterset_kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['filterset'] = self.get_filterset()
-        return context
+
+    def get_filterset_kwargs(self, filterset_class):
+        kwargs = super().get_filterset_kwargs(filterset_class)
+        if self.request.GET:
+            kwargs.update({
+                'data': self.request.GET,
+            })
+        return kwargs
+
+class NewsCreate(CreateView):
+    form_class = PostForm
+    model = Post
+    template_name = 'newsedit.html'

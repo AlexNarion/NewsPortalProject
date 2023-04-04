@@ -9,10 +9,10 @@ Post_search
 {% block content %}
     <h1>Все новости(публикации)</h1>
     <form action="" method="get">
-        {{ filterset.form.as_p }}
+        {{ filter.form.as_p }}
         <input type="submit" value="Найти">
     </form>
-    <h3>Количество статей: {{ post_search|length }}</h3>
+    <h3>Количество статей: {{ filter.qs|length }}</h3>
     <hr>
     {% if post_search %}
         <table>
