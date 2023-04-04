@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django_filters.views import FilterView
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
 from .filters import PostFilter
 from .forms import PostFilterForm, PostForm
+from django.urls import reverse_lazy
 
 
 class PostList(ListView):
@@ -41,12 +42,36 @@ class PostSearch(FilterView):
             })
         return kwargs
 
+
 class NewsCreate(CreateView):
     form_class = PostForm
     model = Post
-    template_name = 'newsedit.html'
+    template_name = 'postedit.html'
 
     def form_valid(self, form):
         post = form.save(commit=False)
-        post.category = 'NY'
+        post.type_choose = 'NY'
+        return super().form_valid(form)
+
+
+class PostEdit(UpdateView):
+    form_class = PostForm
+    model = Post
+    template_name = 'postedit.html'
+
+
+class PostDelete(DeleteView):
+    model = Post
+    template_name = 'postdelete.html'
+    success_url = reverse_lazy('posts_view')
+
+
+class ArticleCreate(CreateView):
+    form_class = PostForm
+    model = Post
+    template_name = 'postedit.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.type_choose = 'AR'
         return super().form_valid(form)
