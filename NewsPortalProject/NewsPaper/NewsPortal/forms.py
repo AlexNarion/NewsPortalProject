@@ -20,4 +20,3 @@ class PostForm(forms.ModelForm):
         fields = ['post_author','category','header','text','category']
 
 
-

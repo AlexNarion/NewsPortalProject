@@ -54,6 +54,8 @@ class NewsCreate(CreateView):
         return super().form_valid(form)
 
 
+
+
 class PostEdit(UpdateView):
     form_class = PostForm
     model = Post
