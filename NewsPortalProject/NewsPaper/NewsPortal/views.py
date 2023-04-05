@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import render
 from django_filters.views import FilterView
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -5,6 +7,7 @@ from .models import Post
 from .filters import PostFilter
 from .forms import PostFilterForm, PostForm
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class PostList(ListView):
@@ -56,10 +59,11 @@ class NewsCreate(CreateView):
 
 
 
-class PostEdit(UpdateView):
+class PostEdit(UpdateView, LoginRequiredMixin):
     form_class = PostForm
     model = Post
     template_name = 'postedit.html'
+
 
 
 class PostDelete(DeleteView):
