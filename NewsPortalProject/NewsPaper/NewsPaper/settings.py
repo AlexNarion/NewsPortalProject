@@ -132,3 +132,5 @@ STATICFILES_DIRS = [
 ]
 
 LOGIN_REDIRECT_URL = '/posts/'
+
+SITE_ID = 1

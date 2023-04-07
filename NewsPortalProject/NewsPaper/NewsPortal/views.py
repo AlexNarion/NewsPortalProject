@@ -52,9 +52,7 @@ class NewsCreate(CreateView,PermissionRequiredMixin, LoginRequiredMixin):
     model = Post
     template_name = 'postedit.html'
 
-    permission_required = (
-
-    )
+    permission_required = ['add_post']
 
 
     def form_valid(self, form):
@@ -65,10 +63,11 @@ class NewsCreate(CreateView,PermissionRequiredMixin, LoginRequiredMixin):
 
 
 
-class PostEdit(UpdateView, LoginRequiredMixin):
+class PostEdit(UpdateView, LoginRequiredMixin, PermissionRequiredMixin):
     form_class = PostForm
     model = Post
     template_name = 'postedit.html'
+    permission_required = ['change_post']
 
 
 
@@ -78,7 +77,7 @@ class PostDelete(DeleteView):
     success_url = reverse_lazy('posts_view')
 
 
-class ArticleCreate(CreateView, LoginRequiredMixin):
+class ArticleCreate(CreateView, LoginRequiredMixin,PermissionRequiredMixin):
     form_class = PostForm
     model = Post
     template_name = 'postedit.html'
@@ -87,3 +86,5 @@ class ArticleCreate(CreateView, LoginRequiredMixin):
         post = form.save(commit=False)
         post.type_choose = 'AR'
         return super().form_valid(form)
+
+    permission_required = ['add_post']
