@@ -8,6 +8,7 @@ from .filters import PostFilter
 from .forms import PostFilterForm, PostForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 class PostList(ListView):
@@ -46,10 +47,15 @@ class PostSearch(FilterView):
         return kwargs
 
 
-class NewsCreate(CreateView):
+class NewsCreate(CreateView,PermissionRequiredMixin, LoginRequiredMixin):
     form_class = PostForm
     model = Post
     template_name = 'postedit.html'
+
+    permission_required = (
+
+    )
+
 
     def form_valid(self, form):
         post = form.save(commit=False)
@@ -72,7 +78,7 @@ class PostDelete(DeleteView):
     success_url = reverse_lazy('posts_view')
 
 
-class ArticleCreate(CreateView):
+class ArticleCreate(CreateView, LoginRequiredMixin):
     form_class = PostForm
     model = Post
     template_name = 'postedit.html'
