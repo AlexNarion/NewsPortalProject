@@ -1,10 +1,11 @@
 import django_filters
 from django import forms
 from django_filters import FilterSet, ModelChoiceFilter, DateFilter, CharFilter
-from .models import Post, PostCategory, Author
+from .models import Post, PostCategory, Author, Category
 from django_filters.widgets import RangeWidget
 from django.forms.widgets import TextInput
 from django.forms import DateInput
+from django_filters import filters
 
 
 class PostFilterForm(forms.Form):
@@ -26,4 +27,10 @@ class PostFilter(FilterSet):
         model = Post
         form_class = PostFilterForm
         fields = ['post_author', 'addtime', 'header']
+
+
+class CategoryFilter(FilterSet):
+    class Meta:
+        model = Category
+        fields = ['name']
 

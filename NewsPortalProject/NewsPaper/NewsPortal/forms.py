@@ -1,5 +1,5 @@
 from django import forms
-from.models import Post, PostCategory, Author
+from.models import Post, PostCategory, Author, Category
 from .filters import PostFilter
 
 
@@ -19,4 +19,5 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['post_author','category','header','text','category']
 
-
+class CategoryForm(forms.Form):
+    category = forms.ModelChoiceField(queryset=Category.objects.all())
