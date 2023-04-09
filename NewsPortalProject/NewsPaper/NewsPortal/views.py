@@ -47,7 +47,7 @@ class PostSearch(FilterView):
         return kwargs
 
 
-class NewsCreate(CreateView,PermissionRequiredMixin, LoginRequiredMixin):
+class NewsCreate(PermissionRequiredMixin, CreateView, LoginRequiredMixin):
     form_class = PostForm
     model = Post
     template_name = 'postedit.html'
@@ -63,7 +63,7 @@ class NewsCreate(CreateView,PermissionRequiredMixin, LoginRequiredMixin):
 
 
 
-class PostEdit(UpdateView, LoginRequiredMixin, PermissionRequiredMixin):
+class PostEdit(PermissionRequiredMixin,UpdateView, LoginRequiredMixin):
     form_class = PostForm
     model = Post
     template_name = 'postedit.html'
@@ -78,7 +78,7 @@ class PostDelete(DeleteView):
     permission_required = ('NewsPortal.delete_post',)
 
 
-class ArticleCreate(CreateView, LoginRequiredMixin,PermissionRequiredMixin):
+class ArticleCreate(PermissionRequiredMixin, CreateView, LoginRequiredMixin):
     form_class = PostForm
     model = Post
     template_name = 'postedit.html'
