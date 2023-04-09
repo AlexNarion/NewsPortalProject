@@ -26,7 +26,6 @@ SECRET_KEY = 'django-insecure-dxh#l6*r+7^n-_yb%7ch-v8oma3104nl)bs-z(4i1ly=phz+ki
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -42,6 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django_filters',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'sign',
+    'protect'
 ]
 
 MIDDLEWARE = [
@@ -67,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -132,5 +138,20 @@ STATICFILES_DIRS = [
 ]
 
 LOGIN_REDIRECT_URL = '/posts/'
+LOGIN_URL = '/accounts/login/'
 
 SITE_ID = 1
+
+ALLOWED_HOSTS = ['127.0.0.1']
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_FORMS = {'signup':'sign.forms.BasicSignupForm'}
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
