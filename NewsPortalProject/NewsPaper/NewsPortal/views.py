@@ -3,15 +3,12 @@ import logging
 from django.shortcuts import render
 from django_filters.views import FilterView
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Subscribers, Category
-from .filters import PostFilter, CategoryFilter
-from .forms import PostFilterForm, PostForm, CategoryForm
+from .models import Post, Category, Subscribers
+from .filters import PostFilter
+from .forms import PostFilterForm, PostForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.core.paginator import Paginator
 
 
 class PostList(ListView):
@@ -93,22 +90,9 @@ class ArticleCreate(PermissionRequiredMixin, CreateView, LoginRequiredMixin):
 
     permission_required = ('NewsPortal.add_post',)
 
-@csrf_exempt
-def get_subscriber(request):
-    if request.method == 'POST':
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            user = request.user
-            category = form.cleaned_data['category']
-            subscriber, created = Subscribers.objects.get_or_create(user=user, category=category)
-            if created:
-                return JsonResponse({'status': 'success', 'message': 'Подписка успешно создана'})
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Вы уже подписаны на эту категорию'})
-    else:
-        form = CategoryForm()
-        posts = Post.objects.all()
-        paginator = Paginator(posts, 10)
-        page = request.GET.get('page')
-        page_obj = paginator.get_page(page)
-        context = {'posts': posts, 'form': form, 'page_obj': page_obj}
+class CategoryView(ListView):
+    model = Category
+    ordering = 'name'
+    template_name = 'subscribe.html'
+    context_object_name = 'category'
+    paginate_by = 10
