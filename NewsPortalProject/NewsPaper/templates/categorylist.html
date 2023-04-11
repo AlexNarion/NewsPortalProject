@@ -6,8 +6,11 @@ Posts
 {% endblock title %}
 
 {% block content %}
-    <h1>Все новости(публикации)</h1>
-    <h3>Количество статей: {{ posts|length }}</h3>
+    <h1>Все новости(публикации) Категории: {{ category_news_list.category }}</h1>
+    {% if is_not_subscriber %}
+        <p class="text-center"><a href="{}" class="btn btn-secondary btn-sm">Подписаться</a></p>
+    {% endif %}
+    <h3>Количество статей: {{ category_news_list|length }}</h3>
     <hr>
     {% if posts %}
         <table>
@@ -15,9 +18,10 @@ Posts
                 <td>Заголовок  </td>
                 <td>Дата публикации  </td>
                 <td>Описание...  </td>
+                <td>Категория</td>
             </tr>
         </table>
-        {% for post in posts %}
+        {% for post in category_news_list %}
         <table>
             <tr>
                 <td>{{ post.header|censor }}</td>
