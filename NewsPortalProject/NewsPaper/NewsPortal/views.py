@@ -1,5 +1,5 @@
 import logging
-
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django_filters.views import FilterView
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -105,3 +105,12 @@ class CategoryListView(ListView):
         context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()
         context['category'] = self.category
         return context
+
+@login_required
+def subscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subscribers.add(user)
+
+    message = 'Вы успешно подписались на рассылку новостей категории'
+    return render(request, 'subscribe.html', {'category':category, 'message':message})

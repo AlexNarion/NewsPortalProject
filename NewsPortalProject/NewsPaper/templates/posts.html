@@ -15,6 +15,7 @@ Posts
                 <td>Заголовок  </td>
                 <td>Дата публикации  </td>
                 <td>Описание...  </td>
+                <td>Категория</td>
             </tr>
         </table>
         {% for post in posts %}
@@ -23,6 +24,10 @@ Posts
                 <td>{{ post.header|censor }}</td>
                 <td>{{ post.addtime|date:'d M Y'}}</td>
                 <td>{{ post.text|truncatechars:20|censor }}</td>
+                <td>{% for category in post.category.all %}
+                        <td><a href="{% url 'category_list' category.id %}">{{ category }}</a></td>
+                    {% endfor %}
+                </td>
             </tr>
         </table>
         {% endfor %}

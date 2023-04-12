@@ -1,36 +1,4 @@
 {% extends 'flatpages/default.html' %}
-{% block title %}
-Categories
-{% endblock title %}
-
 {% block content %}
-    <h1>Категории доступные для подписки:</h1>
-    <hr>
-    {% if category %}
-        <table>
-            <tr>
-                <h1>Категория</h1>
-            </tr>
-        </table>
-        <table>
-            <tr>
-                <td><a href="">Блогерство</a></td>
-            </tr>
-            <tr>
-                <td><a href="">Еда</a></td>
-            </tr>
-            <tr>
-                <td><a href="">Кино</a></td>
-            </tr>
-            <tr>
-                <td><a href="">Музыка</a></td>
-            </tr>
-            <tr>
-                <td><a href="">Политика</a></td>
-            </tr>
-            <tr>
-                <td><a href="">Спорт</a></td>
-            </tr>
-        </table>
-    {% endif %}
+    <h1 class="text-center">{{ message }} {{ category}}</h1>
 {% endblock content %}

@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'NewsPortal',
+    'NewsPortal.apps.NewsportalConfig',
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django_filters',
@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'sign',
-    'protect'
+    'protect',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
@@ -148,10 +149,22 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_FORMS = {'signup':'sign.forms.BasicSignupForm'}
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+SITE_URL = 'http://127.0.0.1:8000'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'narion567'
+EMAIL_HOST_PASSWORD = 'Trendyturtleapppass238hgmnj7hgbfn.'
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'support@trendy-turtle.ru'
+
+APSCHEDULER_DATETIME_FROMAT = 'N j, Y, f:s a'
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
