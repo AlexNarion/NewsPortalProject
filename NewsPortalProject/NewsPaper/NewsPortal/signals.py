@@ -21,7 +21,7 @@ def send_notifications(preview, pk, title, subscribers):
         subject=title,
         body='',
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=subscribers,
+        bcc=subscribers,
     )
 
     msg.attach_alternative(html_content, 'text/html')

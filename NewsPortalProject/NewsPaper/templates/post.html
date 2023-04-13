@@ -10,4 +10,5 @@ Post
 <h2>Дата публикации: {{ post.addtime|date:'d M Y' }}</h2>
 <hr>
 <h2>{{ post.text|censor }}</h2>
+<p class="text-center"><a href="{% url 'news_edit' posts.id %}" class="btn btn-secondary btn-sm">Изменить</a></p>
 {% endblock content %}
