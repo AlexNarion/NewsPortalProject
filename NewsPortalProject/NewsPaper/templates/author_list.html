@@ -2,17 +2,17 @@
 {% load custom_filters %}
 
 {% block title %}
-Posts
+Автор {{ author }}
 {% endblock title %}
 
 {% block content %}
 
-    <h1>Все новости(публикации) </h1>
-    <h3>Количество публикаций: {{ posts|length }}</h3>
+    <h1>Все публикации автора {{ author }} </h1>
+    <h3>Количество публикаций: {{ author_list|length }}</h3>
     <hr>
-    {% if posts %}
+    {% if author_list %}
         <ul class="list-group list-group-flush">
-            {% for newspost in posts %}
+            {% for newspost in author_list %}
                 <li class="list-group-item">
                     <small class="fw-bold">{{ newspost.addtime | date:'d M Y' }}</small>
                     <a href="{% url 'post_detail' newspost.id %}">{{ newspost.header }}</a>

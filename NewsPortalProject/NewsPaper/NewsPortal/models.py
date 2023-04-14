@@ -6,6 +6,7 @@ from django.urls import reverse
 class Author(models.Model):
     username = models.OneToOneField(User, on_delete= models.CASCADE)
     rating = models.FloatField(default= 0.0)
+    subscribers = models.ManyToManyField(User, related_name='author_subs')
 
     def update_rating(self):
         post_rating = sum(post.rating for post in self.post_set.all()) * 3

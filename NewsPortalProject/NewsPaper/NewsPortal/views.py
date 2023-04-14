@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django_filters.views import FilterView
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Category
+from .models import Post, Category, Author
 from .filters import PostFilter
 from .forms import PostFilterForm, PostForm
 from django.urls import reverse_lazy
@@ -114,3 +114,20 @@ def subscribe(request, pk):
 
     message = 'Вы успешно подписались на рассылку новостей категории'
     return render(request, 'subscribe.html', {'category':category, 'message':message})
+
+
+class AuthorListView(ListView):
+    model = Post
+    template_name = 'author_list.html'
+    context_object_name = 'author_list'
+
+    def get_queryset(self):
+        self.post_author = get_object_or_404(Author, id=self.kwargs['pk'])
+        queryset = Post.objects.filter(post_author=self.post_author).order_by('-rating')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_not_subscriber'] = self.request.user not in self.post_author.subscribers.all()
+        context['author'] = self.post_author
+        return context
