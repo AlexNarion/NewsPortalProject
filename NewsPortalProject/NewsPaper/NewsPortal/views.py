@@ -3,9 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django_filters.views import FilterView
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Category, Author
+from .models import Post, Category, Author, Comment
 from .filters import PostFilter
-from .forms import PostFilterForm, PostForm
+from .forms import PostForm, CommentForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -51,6 +51,13 @@ class NewsCreate(PermissionRequiredMixin, CreateView, LoginRequiredMixin):
     form_class = PostForm
     model = Post
     template_name = 'postedit.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.type_choose = 'NY'
+        author = get_object_or_404(Author, username=self.request.user)
+        post.post_author = author
+        return super().form_valid(form)
 
     permission_required = ('NewsPortal.add_post',)
 
@@ -163,4 +170,19 @@ def category_un_sub(request, pk):
 
     message = 'Вы отписались от категории'
     return render(request, 'categoryunsub.html', {'category': category, 'message': message})
+
+
+class CommentCreate(PermissionRequiredMixin, CreateView, LoginRequiredMixin):
+    form_class = CommentForm
+    model = Comment
+    template_name = 'post.html'
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.post = get_object_or_404(Post, id=self.request.pk)
+        user = get_object_or_404(Author, username=self.request.user)
+        comment.user = user
+        return super().form_valid(form)
+
+    permission_required = ('NewsPortal.add_post')
 

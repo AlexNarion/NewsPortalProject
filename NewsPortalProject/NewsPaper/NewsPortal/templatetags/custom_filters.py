@@ -7,7 +7,7 @@ def censor(value):
     if not isinstance(value,str):
         raise ValueError('Тип должен быть строковый')
 
-    ban_words = ['редиска', 'дурак', 'тварь']
+    ban_words = ['мразь', 'дурак', 'тварь']
 
     words = value.split()
 

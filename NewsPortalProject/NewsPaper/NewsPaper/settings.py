@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-dxh#l6*r+7^n-_yb%7ch-v8oma3104nl)bs-z(4i1ly=phz+ki'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 
 
@@ -168,9 +168,3 @@ DEFAULT_FROM_EMAIL = 'trendyturtle@yandex.ru'
 
 APSCHEDULER_DATETIME_FROMAT = 'N j, Y, f:s a'
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
-
-CELERY_BROKER_URL = 'redis://:KVfz0apoYnZlIOomPplpDPE97slnFjsY@redis-17233.c280.us-central1-2.gce.cloud.redislabs.com:17233/0'
-CELERY_RESULT_BACKEND = 'redis://:KVfz0apoYnZlIOomPplpDPE97slnFjsY@redis-17233.c280.us-central1-2.gce.cloud.redislabs.com:17233/0'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'

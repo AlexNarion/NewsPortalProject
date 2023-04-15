@@ -1,5 +1,5 @@
 from django import forms
-from.models import Post, PostCategory, Author
+from.models import Post, PostCategory, Author, Comment
 from .filters import PostFilter
 
 
@@ -18,5 +18,10 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['category','header','text','category']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['comment_text']
 
 
