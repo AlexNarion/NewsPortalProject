@@ -17,9 +17,7 @@ Posts
                     <small class="fw-bold">{{ newspost.addtime | date:'d M Y' }}</small>
                     <a href="{% url 'post_detail' newspost.id %}">{{ newspost.header }}</a>
                     <small class="text-muted">(автор:
-                        {% for author in newspost.post_author.all %}
-                            <a href="{% url "author_list" author.id %}">{{ author }}</a>
-                        {% endfor %}
+                        <a href="{% url "author_list" newspost.post_author.id %}">{{ newspost.post_author }}</a>
                       )</small> <br>
                     <small class="fw-bold">категории:
                         {% for category in newspost.category.all %}

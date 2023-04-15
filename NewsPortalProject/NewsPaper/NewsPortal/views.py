@@ -58,6 +58,8 @@ class NewsCreate(PermissionRequiredMixin, CreateView, LoginRequiredMixin):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.type_choose = 'NY'
+        author = get_object_or_404(Author, username=self.request.user)
+        post.post_author = author
         return super().form_valid(form)
 
 
@@ -86,6 +88,8 @@ class ArticleCreate(PermissionRequiredMixin, CreateView, LoginRequiredMixin):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.type_choose = 'AR'
+        author = get_object_or_404(Author, username=self.request.user)
+        post.post_author = author
         return super().form_valid(form)
 
     permission_required = ('NewsPortal.add_post',)
@@ -103,6 +107,7 @@ class CategoryListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()
+        context['is_subscriber'] = self.request.user in self.category.subscribers.all()
         context['category'] = self.category
         return context
 
@@ -129,5 +134,33 @@ class AuthorListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['user_not_subscriber'] = self.request.user not in self.post_author.subscribers.all()
+        context['user_is_subscriber'] = self.request.user in self.post_author.subscribers.all()
         context['author'] = self.post_author
         return context
+
+def authorsub(request, pk):
+    user = request.user
+    post_author = Author.objects.get(id=pk)
+    post_author.subscribers.add(user)
+
+    message = 'Вы подписались на автора!'
+    return render(request, 'authorsub.html', {'post_author': post_author, 'message': message})
+
+
+def author_un_sub(request, pk):
+    user = request.user
+    post_author = Author.objects.get(id=pk)
+    post_author.subscribers.remove(user)
+
+    message = 'Вы отписались от автора'
+    return render(request, 'authorunsub.html', {'post_author': post_author, 'message': message})
+
+
+def category_un_sub(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subscribers.remove(user)
+
+    message = 'Вы отписались от категории'
+    return render(request, 'categoryunsub.html', {'category': category, 'message': message})
+

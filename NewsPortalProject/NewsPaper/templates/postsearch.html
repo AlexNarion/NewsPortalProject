@@ -13,15 +13,14 @@ Post_search
         <input type="submit" value="Найти">
     </form>
     <hr>
-    <h3>Количество публикаций: {{ posts|length }}</h3>
-    <hr>
     {% if post_search %}
         <ul class="list-group list-group-flush">
             {% for newspost in post_search %}
                 <li class="list-group-item">
                     <small class="fw-bold">{{ newspost.addtime | date:'d M Y' }}</small>
                     <a href="{% url 'post_detail' newspost.id %}">{{ newspost.header }}</a>
-                    <small class="text-muted">(автор: {{ newspost.post_author }})</small> <br>
+                    <small class="text-muted">(автор:
+                        <a href="{% url "author_list" newspost.post_author.id %}">{{ newspost.post_author }}</a>)</small> <br>
                     <small class="fw-bold">категории:
                         {% for category in newspost.category.all %}
                             <a href="{% url "category_list" category.id %}">{{ category }}</a>

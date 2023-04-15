@@ -10,6 +10,9 @@ Posts
     {% if is_not_subscriber %}
         <p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn btn-secondary btn-sm">Подписаться</a></p>
     {% endif %}
+    {% if is_subscriber %}
+        <p class="text-center"><a href="{% url 'category_un_sub' category.id %}" class="btn btn-secondary btn-sm">Отписаться</a></p>
+    {% endif %}
     <h3>Количество статей: {{ category_news_list|length }}</h3>
     <hr>
     {% if category_news_list %}
@@ -18,7 +21,8 @@ Posts
                 <li class="list-group-item">
                     <small class="fw-bold">{{ newspost.addtime | date:'d M Y' }}</small>
                     <a href="{% url 'post_detail' newspost.id %}">{{ newspost.header }}</a>
-                    <small class="text-muted">(автор: {{ newspost.post_author }})</small> <br>
+                    <small class="text-muted">(автор:
+                        <a href="{% url "author_list" newspost.post_author.id %}">{{ newspost.post_author }}</a>)</small> <br>
                     <small class="fw-bold">категории:
                         {% for category in newspost.category.all %}
                             <a href="{% url "category_list" category.id %}">{{ category }}</a>

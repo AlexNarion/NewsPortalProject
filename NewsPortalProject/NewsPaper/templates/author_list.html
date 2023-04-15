@@ -8,6 +8,12 @@
 {% block content %}
 
     <h1>Все публикации автора {{ author }} </h1>
+    {% if user_not_subscriber %}
+        <p class="text-center"><a href="{% url 'author_subscribe' author.id %}" class="btn btn-secondary btn-sm">Подписаться</a></p>
+    {% endif %}
+    {% if user_is_subscriber %}
+        <p class="text-center"><a href="{% url 'author_un_sub' author.id %}" class="btn btn-secondary btn-sm">Отписаться</a></p>
+    {% endif %}
     <h3>Количество публикаций: {{ author_list|length }}</h3>
     <hr>
     {% if author_list %}
@@ -16,11 +22,6 @@
                 <li class="list-group-item">
                     <small class="fw-bold">{{ newspost.addtime | date:'d M Y' }}</small>
                     <a href="{% url 'post_detail' newspost.id %}">{{ newspost.header }}</a>
-                    <small class="text-muted">(автор:
-                        {% for author in newspost.post_author.all %}
-                            <a href="{% url "author_list" author.id %}">{{ author }}</a>
-                        {% endfor %}
-                      )</small> <br>
                     <small class="fw-bold">категории:
                         {% for category in newspost.category.all %}
                             <a href="{% url "category_list" category.id %}">{{ category }}</a>

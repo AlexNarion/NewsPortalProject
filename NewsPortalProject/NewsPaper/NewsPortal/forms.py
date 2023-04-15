@@ -17,6 +17,6 @@ class PostFilterForm(PostFilter.form):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['post_author','category','header','text','category']
+        fields = ['category','header','text','category']
 
 
