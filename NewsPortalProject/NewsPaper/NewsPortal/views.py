@@ -1,11 +1,19 @@
 import logging
+from urllib import request
+
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from django_filters.views import FilterView
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Category, Author, Comment
+from django.views.generic.edit import FormMixin
+
+
+from .models import Post, Category, Author
 from .filters import PostFilter
-from .forms import PostForm, CommentForm
+from .forms import PostFilterForm, PostForm, CommentForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -18,11 +26,48 @@ class PostList(ListView):
     context_object_name = 'posts'
     paginate_by = 10
 
+class CustomSuccessMessageMixin:
+    @property
+    def success_msg(self):
+        return False
 
-class PostDetail(DetailView):
+    def form_valid(self, form):
+        messages.success(self.request, self.success_msg)
+        return super().form_valid(form)
+    def get_success_url(self):
+        return '%s?id=%s' % (self.success_url, self.object.id)
+class PostDetail(CustomSuccessMessageMixin, DetailView, FormMixin):
     model = Post
     template_name = 'post.html'
     context_object_name = 'post'
+    form_class = CommentForm
+    success_msg = 'Комментарий успешно создан!'
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('post_detail', kwargs={'pk':self.get_object().id})
+
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.post = self.get_object()
+        self.object.save()
+        return super().form_valid(form)
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.post_author.username
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_author'] = self.test_func()
+        return context
 
 
 class PostSearch(FilterView):
@@ -51,13 +96,6 @@ class NewsCreate(PermissionRequiredMixin, CreateView, LoginRequiredMixin):
     form_class = PostForm
     model = Post
     template_name = 'postedit.html'
-
-    def form_valid(self, form):
-        post = form.save(commit=False)
-        post.type_choose = 'NY'
-        author = get_object_or_404(Author, username=self.request.user)
-        post.post_author = author
-        return super().form_valid(form)
 
     permission_required = ('NewsPortal.add_post',)
 
@@ -171,18 +209,4 @@ def category_un_sub(request, pk):
     message = 'Вы отписались от категории'
     return render(request, 'categoryunsub.html', {'category': category, 'message': message})
 
-
-class CommentCreate(PermissionRequiredMixin, CreateView, LoginRequiredMixin):
-    form_class = CommentForm
-    model = Comment
-    template_name = 'post.html'
-
-    def form_valid(self, form):
-        comment = form.save(commit=False)
-        comment.post = get_object_or_404(Post, id=self.request.pk)
-        user = get_object_or_404(Author, username=self.request.user)
-        comment.user = user
-        return super().form_valid(form)
-
-    permission_required = ('NewsPortal.add_post')
 

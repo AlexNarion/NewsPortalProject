@@ -161,8 +161,8 @@ SITE_URL = 'http://127.0.0.1:8000'
 
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'trendyturtle'
-EMAIL_HOST_PASSWORD = 'Trendyturtleapppass238hgmnj7hgbfn.'
+EMAIL_HOST_USER = '*'
+EMAIL_HOST_PASSWORD = '*'
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'trendyturtle@yandex.ru'
 

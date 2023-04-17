@@ -70,9 +70,9 @@ class PostCategory(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete= models.CASCADE)
+    post = models.ForeignKey(Post, on_delete= models.CASCADE, related_name='comment_post')
     user = models.ForeignKey(User, on_delete= models.CASCADE)
-    comment_text = models.TextField()
+    comment_text = models.TextField(max_length='250')
     addtime = models.DateTimeField(auto_now_add= True)
     rating = models.FloatField(default= 0.0)
 
