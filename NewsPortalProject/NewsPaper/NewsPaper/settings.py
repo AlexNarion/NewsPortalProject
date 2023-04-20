@@ -168,3 +168,9 @@ DEFAULT_FROM_EMAIL = 'trendyturtle@yandex.ru'
 
 APSCHEDULER_DATETIME_FROMAT = 'N j, Y, f:s a'
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
+CELERY_BROKER_URL = 'redis://default:KVfz0apoYnZlIOomPplpDPE97slnFjsY@redis-17233.c280.us-central1-2.gce.cloud.redislabs.com:17233'
+CELERY_RESULT_BACKEND = 'redis://default:KVfz0apoYnZlIOomPplpDPE97slnFjsY@redis-17233.c280.us-central1-2.gce.cloud.redislabs.com:17233'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
