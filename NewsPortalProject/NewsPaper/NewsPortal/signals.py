@@ -7,30 +7,10 @@ from .models import Category, Author, Post
 import requests
 from django.contrib.auth.models import User
 from celery import shared_task
-
+from .tasks import send_notifications, send_notifications_about_author_post
 from .models import PostCategory
 
-@shared_task
-def send_notifications(preview, pk, title, subscribers):
-    html_content = render_to_string(
-        'post_created_email.html',
-        {
-            'text': preview,
-            'link': f'{settings.SITE_URL}/posts/{pk}'
-        }
-    )
 
-    msg = EmailMultiAlternatives(
-        subject=title,
-        body='',
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        bcc=subscribers,
-    )
-
-    msg.attach_alternative(html_content, 'text/html')
-    msg.send()
-
-@shared_task
 @receiver(m2m_changed, sender=PostCategory)
 def notify_about_new_post(sender, instance, **kwargs):
     if kwargs['action'] == 'post_add':
@@ -41,7 +21,7 @@ def notify_about_new_post(sender, instance, **kwargs):
 
         subscribers = [s.email for s in subscribers]
 
-        send_notifications(instance.preview(), instance.pk, instance.header, subscribers)
+        send_notifications.delay(instance.preview(), instance.pk, instance.header, subscribers)
 
 @shared_task
 @receiver(post_save, sender=Post)
@@ -51,27 +31,7 @@ def notify_subscribers(sender, instance, created, **kwargs):
         subscribers = author.subscribers.all()
         subscribers = [s.email for s in subscribers]
 
-        send_notifications_about_author_post(instance.preview(), instance.pk, instance.header, subscribers)
-
-@shared_task
-def send_notifications_about_author_post(preview, pk, title, subscribers):
-    html_content = render_to_string(
-        'author_created_email.html',
-        {
-            'text': preview,
-            'link': f'{settings.SITE_URL}/posts/{pk}'
-        }
-    )
-
-    msg = EmailMultiAlternatives(
-        subject=title,
-        body='',
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        bcc=subscribers,
-    )
-
-    msg.attach_alternative(html_content, 'text/html')
-    msg.send()
+        send_notifications_about_author_post.delay(instance.preview(), instance.pk, instance.header, subscribers)
 
 @shared_task
 @receiver(post_save, sender=User)
