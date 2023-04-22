@@ -15,13 +15,14 @@ from .models import PostCategory
 def notify_about_new_post(sender, instance, **kwargs):
     if kwargs['action'] == 'post_add':
         categories = instance.category.all()
-        subscribers: list[str] = []
+        subscribers_emails = []
         for category in categories:
-            subscribers += category.subscribers.all()
+            subscribers = category.subscribers.all()
 
-        subscribers = [s.email for s in subscribers]
+            subscribers_emails += [s.email for s in subscribers]
 
-        send_notifications.delay(instance.preview(), instance.pk, instance.header, subscribers)
+        send_notifications.delay(instance.preview(), instance.pk, instance.header, subscribers_emails)
+        print(subscribers_emails)
 
 @shared_task
 @receiver(post_save, sender=Post)

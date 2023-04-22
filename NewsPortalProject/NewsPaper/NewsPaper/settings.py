@@ -159,15 +159,14 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_URL = 'http://127.0.0.1:8000'
 
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'narion567'
-EMAIL_HOST_PASSWORD = 'Trendyturtleapppass238hgmnj7hgbfn.'
-EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = 'support@trendy-turtle.ru'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = 'trendyturtle'
+EMAIL_HOST_PASSWORD = 'VKi6DiG2DdUde8059cTX'
+EMAIL_USE_SSL = False
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'trendyturtle@mail.ru'
 
-APSCHEDULER_DATETIME_FROMAT = 'N j, Y, f:s a'
-APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
 CELERY_BROKER_URL = 'redis://default:KVfz0apoYnZlIOomPplpDPE97slnFjsY@redis-17233.c280.us-central1-2.gce.cloud.redislabs.com:17233'
 CELERY_RESULT_BACKEND = 'redis://default:KVfz0apoYnZlIOomPplpDPE97slnFjsY@redis-17233.c280.us-central1-2.gce.cloud.redislabs.com:17233'
