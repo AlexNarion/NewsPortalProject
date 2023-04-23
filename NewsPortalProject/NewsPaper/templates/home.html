@@ -1,9 +1,9 @@
 {% extends 'flatpages/default.html' %}
 
 {% block content %}
-<h2>Страница авторизованного пользователя {{ request.user.username }}</h2>
+{% load cache %}{% cache 1000 user_page_header %}<h2>Страница авторизованного пользователя</h2>{% endcache %}<h2>{{ request.user.username }}</h2>
 <div>Здесь может содержать персональная информация для каждого пользователя</div>
 
-<button><a href="sign/logout">Выйти</a></button>
+{% load cache %}{% cache 1000 logout_button %}<button><a href="sign/logout">Выйти</a></button>{% endcache %}
 
 {% endblock %}

@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404
 from django_filters.views import FilterView
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
-
+from django.core.cache import cache
 
 from .models import Post, Category, Author
 from .filters import PostFilter
@@ -25,6 +25,7 @@ class PostList(ListView):
     template_name = 'posts.html'
     context_object_name = 'posts'
     paginate_by = 10
+
 
 class CustomSuccessMessageMixin:
     @property
@@ -42,6 +43,14 @@ class PostDetail(CustomSuccessMessageMixin, DetailView, FormMixin):
     context_object_name = 'post'
     form_class = CommentForm
     success_msg = 'Комментарий успешно создан!'
+    queryset = Post.objects.all()
+
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+        return obj
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('post_detail', kwargs={'pk':self.get_object().id})
